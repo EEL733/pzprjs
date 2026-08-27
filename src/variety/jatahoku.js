@@ -1020,7 +1020,11 @@
 		checkNumbersCompleteInRoom: function() {
 			var rooms = this.board.roommgr.components;
 			for (var i = 0; i < rooms.length; i++) {
-				if (this.isNumbersComplete(rooms[i].clist, true)) {
+				var clist = rooms[i].clist,
+					hasWhiteCell = clist.some(function(cell) {
+						return cell.qnums.length === 0;
+					});
+				if (!hasWhiteCell || this.isNumbersComplete(clist, true)) {
 					continue;
 				}
 				this.failcode.add("bkMissNum");

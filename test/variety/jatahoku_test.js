@@ -249,4 +249,18 @@ describe("Variety:jatahoku", function() {
 		assert.equal(gray.error, 0);
 		assert.equal(normal.error, 1);
 	});
+
+	it("skips the number completeness check for an all-gray block", function() {
+		var puzzle = new pzpr.Puzzle().open("jatahoku/4/4");
+		var room = puzzle.board.roommgr.components[0];
+		room.clist.each(function(cell) {
+			cell.qnums = [0];
+		});
+
+		puzzle.checker.failcode = new puzzle.klass.CheckInfo();
+		puzzle.checker.checkOnly = true;
+		puzzle.checker.checkNumbersCompleteInRoom();
+
+		assert.equal(puzzle.checker.failcode[0], undefined);
+	});
 });
