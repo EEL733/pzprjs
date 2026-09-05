@@ -522,6 +522,35 @@
 				}
 			}
 			return list;
+		},
+		getClueOffsets: function() {
+			var left = this.minbx / -2,
+				top = this.minby / -2;
+
+			for (var bx = this.minbx + 1; bx < 0; bx += 2) {
+				for (var by = 1; by < this.maxby; by += 2) {
+					if (this.getex(bx, by).qnum !== -1) {
+						left = (this.minbx + 1 - bx) / -2;
+						bx = 0;
+						break;
+					}
+				}
+			}
+
+			for (var by = this.minby + 1; by < 0; by += 2) {
+				for (var bx = 1; bx < this.maxbx; bx += 2) {
+					if (this.getex(bx, by).qnum !== -1) {
+						top = (this.minby + 1 - by) / -2;
+						by = 0;
+						break;
+					}
+				}
+			}
+
+			return [
+				Math.min(left, Math.max(0, this.minbx / -2 - 2)),
+				Math.min(top, Math.max(0, this.minby / -2 - 1))
+			];
 		}
 	},
 
@@ -746,6 +775,22 @@
 		cursorIsOnBoard: function() {
 			var cursor = this.puzzle.cursor;
 			return cursor.by <= this.board.maxby;
+		},
+		getBoardCols: function() {
+			return this.getOffsetCols() + this.board.maxbx / 2;
+		},
+		getBoardRows: function() {
+			return this.getOffsetRows() + this.board.maxby / 2;
+		},
+		getOffsetCols: function() {
+			var bd = this.board,
+				offset = this.puzzle.playeronly ? bd.getClueOffsets()[0] : 0;
+			return (0 - bd.minbx) / 2 - offset;
+		},
+		getOffsetRows: function() {
+			var bd = this.board,
+				offset = this.puzzle.playeronly ? bd.getClueOffsets()[1] : 0;
+			return (0 - bd.minby) / 2 - offset;
 		}
 	},
 
